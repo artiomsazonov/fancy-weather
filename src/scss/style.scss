@@ -1,0 +1,287 @@
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('../fonts/fontawesome-webfont.eot?v=4.7.0');
+    src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.7.0') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.7.0') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url(https://images.unsplash.com/photo-1561891840-4d41ab07a4ca?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjEzNTk0OH0);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    font-size: 10px;
+    color: #fff;
+}
+
+.container {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+header {
+    margin-top: 40px;
+}
+
+.flex-header_container {
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+}
+
+button {
+    height: 44px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    border-radius: .5rem;
+    background: rgba(180, 184, 187, .7);
+    font-family: inherit;
+    font-size: .875rem;
+    font-weight: 700;
+    color: #fff;
+    -webkit-transition: all .2s;
+    transition: all .2s;
+    border: none;
+    outline: none !important;
+}
+
+.preload {
+    width: 44px;
+}
+
+.language {
+    width: 71px;
+}
+
+.farengate {
+    border-top-left-radius: .5rem;
+    border-bottom-left-radius: .5rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    padding: 0 14px 0 15px;
+}
+
+.celsiu {
+    border-top-right-radius: .5rem;
+    border-bottom-right-radius: .5rem;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    padding: 0 14px 0 15px;
+}
+
+img {
+    width: 13px;
+}
+
+.nav {
+    font-size: 20px;
+    font-weight: 850;
+}
+
+ul {
+    margin: 0;
+    list-style: none;
+}
+
+.topmenu>li {
+    display: inline-block;
+    margin-right: 10px;
+    position: relative;
+}
+
+.submenu {
+    position: absolute;
+    top: 100%;
+    left: -40px;
+    width: 100%;
+    z-index: 10;
+    -webkit-transition: 0.5s ease-in-out;
+    -moz-transition: 0.5s ease-in-out;
+    -o-transition: 0.5s ease-in-out;
+    transition: 0.5s ease-in-out;
+}
+
+.nav .submenu {
+    display: none;
+}
+
+.nav ul li:hover .submenu {
+    display: block;
+}
+
+.inactive {
+    background: rgba(76, 82, 85, .7);
+    color: hsla(0, 0%, 100%, .7);
+    cursor: pointer;
+}
+
+input {
+    width: 18rem;
+    height: 44px;
+    border: .1rem solid rgba(180, 184, 187, .7);
+    border-radius: .5rem 0 0 .5rem;
+    padding: 1.3rem 1.5rem;
+    background: rgba(76, 82, 85, .7);
+    font-family: inherit;
+    font-size: 14px;
+    color: #fff;
+}
+
+input[type="search"]::-moz-placeholder {
+    color: #ffd595 !important;
+    /* Цвет подсказывающего текста */
+}
+
+.voice-input {
+    position: absolute;
+    z-index: 1;
+    top: 2rem;
+    right: 11.5rem;
+    width: 3rem;
+    height: 4rem;
+    background: url(../img/microphone.svg) 50% no-repeat;
+    background-size: 50%;
+}
+
+.loading {
+    width: 101px;
+    margin-left: -3px;
+    border-radius: 0 .5rem .5rem 0;
+}
+
+.weather-continer {
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 60px 0 0 35px;
+}
+
+.weather-data-cluster {
+    width: 580px;
+}
+
+.weather-data-cluster__location {
+    line-height: 1.15;
+    font-family: Montserrat, tahoma, sans-serif;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+    font-size: 44px;
+}
+
+.weather-data-cluster__date-time {
+    margin-top: 1rem;
+    font-size: 24px;
+    text-transform: capitalize;
+    font-weight: 400;
+}
+
+.weather-data-cluster__temperature-today {
+    text-align: center;
+    font-size: 306px;
+    margin: 0;
+}
+
+.current-weather {
+    display: flex;
+    justify-content: space-between;
+}
+
+.weather-data-cluster__weather-icon {
+    line-height: 1.15;
+    font-family: Montserrat, tahoma, sans-serif;
+    color: #fff;
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+    border-style: none;
+    width: 170px;
+    height: 170px;
+    transform: translateY(-20%);
+}
+
+.weather-data-cluster__weather-data {
+    line-height: 1.15;
+    font-family: Montserrat, tahoma, sans-serif;
+    font-size: 22px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    transform: translateY(-20%);
+    p {
+        margin: 0 0 10px 0;
+    }
+}
+
+.weather-days {
+    display: flex;
+    justify-content: space-between;
+}
+
+.forecast {
+    line-height: 1.15;
+    font-family: Montserrat, tahoma, sans-serif;
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    margin-right: 5px;
+    position: relative;
+    .forecast__day {
+        font-size: 22px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin: 0;
+    }
+    .forecast__temperature {
+        font-size: 80px;
+        margin: 0;
+    }
+    .forecast__icon {
+        position: absolute;
+        top: 19px;
+        left: 140px;
+        width: 67px;
+        height: 67px;
+    }
+}
+
+.map-iframe {
+    font-family: Montserrat, tahoma, sans-serif;
+    color: #fff;
+    font-size: 2.2rem;
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+    width: 375px;
+    height: 375px;
+    border-radius: 5%;
+    overflow: hidden;
+}
+
+.map-cluster__coordinates {
+    margin-top: 20px;
+    font-size: 22px;
+    text-align: right;
+    p {
+        margin: 0;
+    }
+}
