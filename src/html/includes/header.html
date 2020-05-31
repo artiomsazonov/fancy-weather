@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="shortcut icon" href="favicon/favicon.ico" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/style.bundle.css" />
     <title>Fancy Weather</title>
 </head>
@@ -16,22 +17,19 @@
                 <div class="flex-header_item nav">
                     <ul class="menu topmenu">
                         <li><button class="preload"><img src="img/Reload.png" alt="download"></button></li>
-                        <li><button class="language inactive">En</button><button class="language">Ru</button><button class="language">Be</button> </li>
-                        <!--<i class="fa fa-angle-down"></i> <ul class="submenu"> -->
+                        <li><button class="language inactive">En</button><button class="language">Ru</button></li>
                         <li></li>
-                        <!-- </ul> -->
 
-                        <li class="degrees"><button class="farengate inactive">°F</button><button class="celsiu">°C</button></li>
+                        <li class="degrees"><button class="farengate">°F</button><button class="celsiu inactive">°C</button></li>
 
                     </ul>
                 </div>
-                <div class="flex-header_item">
+                <div class="flex-header_item search-container">
                     <form>
                         <input type="search" placeholder="Search city or ZIP" autofocus>
                         <button type="submit" class="voice-input"></button>
                         <button class="loading">Search</button>
                     </form>
-                    <div class="error none">No results for "input value"</div>
                 </div>
             </div>
         </div>
