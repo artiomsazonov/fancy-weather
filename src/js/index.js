@@ -1,10 +1,15 @@
 import countrys from './country.js';
 const urlImg = "https://api.unsplash.com/photos/random?orientation=landscape&per_page=1&query=nature&client_id=tjuTknKjnJDYCcxiACbpfs3na5IwzY0fpGc75GLqI1Y";
-const urlWeather = "https://api.openweathermap.org/data/2.5/forecast?q=Minsk&lang=ua&units=metric&appid=0c155cccd3a72d79d594e3d7b1381dae"
+var nameCity = "Minsk"
+var urlWeather = `https://api.openweathermap.org/data/2.5/forecast?q=${nameCity}&lang=ua&units=metric&appid=0c155cccd3a72d79d594e3d7b1381dae`
 const city = document.querySelector(".weather-data-cluster__location")
 const temperatureToday = document.querySelector(".weather-data-cluster__temperature-today")
 const Latitude = document.querySelector(".lat")
 const Longitude = document.querySelector(".lon");
+const humidity = document.querySelector(".humidity");
+const windSpeed = document.querySelector(".wind-speed");
+const feels = document.querySelector(".feels");
+const descriptionWeather = document.querySelector(".description")
 
 function getLinkToImage() {
     fetch(urlImg)
@@ -48,38 +53,41 @@ function getDayWeek() {
     var activ = document.querySelector(".inactive")
     for (let i = 0; i < days.length; i++) {
         if (activ.innerText == "En") {
-            days[i].innerHTML = daysWeekEn[month_num + 1]
+            days[i].innerHTML = daysWeekEn[month_num + 2]
             month_num++
         } else {
-            days[i].innerHTML = daysWeekRu[month_num + 1]
+            days[i].innerHTML = daysWeekRu[month_num + 2]
             month_num++
         }
     }
-
 }
-// language selection
+getDayWeek()
+    // language selection
 var languages = document.querySelectorAll(".language")
 languages[0].onclick = function() {
     languages[1].classList.remove("inactive")
     languages[0].classList.add("inactive")
     getDayWeek();
     getLatLon()
+    getHumidity()
 }
 languages[1].onclick = function() {
     languages[0].classList.remove("inactive")
     languages[1].classList.add("inactive")
     getDayWeek();
     getLatLon()
+    getHumidity()
 }
-
-// search region
-function getWeather() {
-    fetch(urlWeather)
+var weatherIcon = document.querySelector(".weather-data-cluster__weather-icon")
+    // search region
+function getWeather(Ncity) {
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${Ncity}&lang=ua&units=metric&appid=0c155cccd3a72d79d594e3d7b1381dae`)
         .then(res => res.json())
         .then(data => {
             console.log(data)
-            temperatureToday.innerHTML = Math.round(data.list[0].main.temp)
-
+            temperatureToday.innerHTML = Math.round(data.list[0].main.temp) + "°"
+            weatherIcon.setAttribute("alt", data.list[0].weather[0].main);
+            weatherIcon.setAttribute("src", "./img/" + data.list[0].weather[0].main + ".png");
             for (let i = 0; i < countrys.length; i++) {
                 if (countrys[i].alpha2 == data.city.country) {
                     city.innerHTML = data.city.name + ", " + countrys[i].english
@@ -87,10 +95,10 @@ function getWeather() {
             }
         });
 }
-getWeather()
+getWeather(nameCity)
 
-function getLatLon() {
-    fetch(urlWeather)
+function getLatLon(Ncity) {
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${Ncity}&lang=ua&units=metric&appid=0c155cccd3a72d79d594e3d7b1381dae`)
         .then(res => res.json())
         .then(data => {
             var lon = Math.floor(data.city.coord.lon)
@@ -107,4 +115,213 @@ function getLatLon() {
             }
         });
 }
-getLatLon()
+getLatLon(nameCity)
+
+function getHumidity(Ncity) {
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${Ncity}&lang=ua&units=metric&appid=0c155cccd3a72d79d594e3d7b1381dae`)
+        .then(res => res.json())
+        .then(data => {
+            var activ = document.querySelector(".inactive")
+            if (activ.innerText == "En") {
+                humidity.innerHTML = "HUMIDITY: " + data.list[0].main.humidity + "%";
+                windSpeed.innerHTML = "WIND: " + data.list[0].wind.speed + " m/s"
+                feels.innerHTML = "FEELS LIKE: " + data.list[0].main.feels_like + "°";
+                descriptionWeather.innerHTML = data.list[0].weather[0].main;
+            } else {
+                humidity.innerHTML = "Влажность: " + data.list[0].main.humidity + "%";
+                windSpeed.innerHTML = "Ветер: " + data.list[0].wind.speed + " м/с"
+                feels.innerHTML = "ОЩУЩАЕТСЯ КАК: " + data.list[0].main.feels_like + "°";
+                descriptionWeather.innerHTML = data.list[0].weather[0].description;
+            }
+        });
+}
+getHumidity(nameCity)
+
+
+var tomorrow = document.querySelector(".tomorrow");
+var dayAfterTomorrow = document.querySelector(".day-after-tomorrow");
+var dayAfterAfterTomorrow = document.querySelector(".after-after-tomorrow");
+var date = new Date;
+
+function getTemperatureFuture(Ncity) {
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${Ncity}&lang=ua&units=metric&appid=0c155cccd3a72d79d594e3d7b1381dae`)
+        .then(res => res.json())
+        .then(data => {
+            var x = Number(date.getHours())
+            if (x >= 0 && x < 3) {
+                tomorrow.innerHTML = Math.round(data.list[12].main.temp) + "°";
+                dayAfterTomorrow.innerHTML = Math.round(data.list[20].main.temp) + "°";
+                dayAfterAfterTomorrow.innerHTML = Math.round(data.list[28].main.temp) + "°";
+                tomorrow.classList.add(data.list[0].weather[0].id);
+                tomorrow.nextSibling.setAttribute("alt", data.list[12].weather[0].main);
+                tomorrow.nextSibling.setAttribute("src", "./img/" + data.list[12].weather[0].main + ".png");
+                dayAfterTomorrow.nextSibling.setAttribute("alt", data.list[20].weather[0].main);
+                dayAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[20].weather[0].main + ".png");
+                dayAfterAfterTomorrow.nextSibling.setAttribute("alt", data.list[28].weather[0].main);
+                dayAfterAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[28].weather[0].main + ".png");
+            } else if (x >= 3 && x < 5) {
+                tomorrow.innerHTML = Math.round(data.list[11].main.temp) + "°";
+                dayAfterTomorrow.innerHTML = Math.round(data.list[19].main.temp) + "°";
+                dayAfterAfterTomorrow.innerHTML = Math.round(data.list[27].main.temp) + "°";
+                tomorrow.nextSibling.setAttribute("alt", data.list[11].weather[0].main);
+                tomorrow.nextSibling.setAttribute("src", "./img/" + data.list[11].weather[0].main + ".png");
+                dayAfterTomorrow.nextSibling.setAttribute("alt", data.list[19].weather[0].main);
+                dayAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[19].weather[0].main + ".png");
+                dayAfterAfterTomorrow.nextSibling.setAttribute("alt", data.list[27].weather[0].main);
+                dayAfterAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[27].weather[0].main + ".png");
+            } else if (x >= 6 && x < 8) {
+                tomorrow.innerHTML = Math.round(data.list[10].main.temp) + "°";
+                dayAfterTomorrow.innerHTML = Math.round(data.list[18].main.temp) + "°";
+                dayAfterAfterTomorrow.innerHTML = Math.round(data.list[26].main.temp) + "°";
+                tomorrow.nextSibling.setAttribute("alt", data.list[10].weather[0].main);
+                tomorrow.nextSibling.setAttribute("src", "./img/" + data.list[10].weather[0].main + ".png");
+                dayAfterTomorrow.nextSibling.setAttribute("alt", data.list[18].weather[0].main);
+                dayAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[18].weather[0].main + ".png");
+                dayAfterAfterTomorrow.nextSibling.setAttribute("alt", data.list[26].weather[0].main);
+                dayAfterAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[26].weather[0].main + ".png");
+            } else if (x >= 9 && x < 11) {
+                tomorrow.innerHTML = Math.round(data.list[9].main.temp) + "°";
+                dayAfterTomorrow.innerHTML = Math.round(data.list[17].main.temp) + "°";
+                dayAfterAfterTomorrow.innerHTML = Math.round(data.list[25].main.temp) + "°";
+                tomorrow.nextSibling.setAttribute("alt", data.list[9].weather[0].main);
+                tomorrow.nextSibling.setAttribute("src", "./img/" + data.list[9].weather[0].main + ".png");
+                dayAfterTomorrow.nextSibling.setAttribute("alt", data.list[17].weather[0].main);
+                dayAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[17].weather[0].main + ".png");
+                dayAfterAfterTomorrow.nextSibling.setAttribute("alt", data.list[25].weather[0].main);
+                dayAfterAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[25].weather[0].main + ".png");
+            } else if (x >= 12 && x < 15) {
+                tomorrow.innerHTML = Math.round(data.list[8].main.temp) + "°";
+                dayAfterTomorrow.innerHTML = Math.round(data.list[16].main.temp) + "°";
+                dayAfterAfterTomorrow.innerHTML = Math.round(data.list[24].main.temp) + "°";
+                tomorrow.nextSibling.setAttribute("alt", data.list[8].weather[0].main);
+                tomorrow.nextSibling.setAttribute("src", "./img/" + data.list[8].weather[0].main + ".png");
+                dayAfterTomorrow.nextSibling.setAttribute("alt", data.list[16].weather[0].main);
+                dayAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[16].weather[0].main + ".png");
+                dayAfterAfterTomorrow.nextSibling.setAttribute("alt", data.list[24].weather[0].main);
+                dayAfterAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[24].weather[0].main + ".png");
+            } else if (x >= 15 && x < 18) {
+                tomorrow.innerHTML = Math.round(data.list[7].main.temp) + "°";
+                dayAfterTomorrow.innerHTML = Math.round(data.list[15].main.temp) + "°";
+                dayAfterAfterTomorrow.innerHTML = Math.round(data.list[23].main.temp) + "°";
+                //tomorrow.nextSibling.setAttribute("alt", data.list[7].weather[0].main);
+                tomorrow.nextSibling.setAttribute("alt", data.list[7].weather[0].icon);
+                // tomorrow.nextSibling.setAttribute("src", "./img/" + data.list[7].weather[0].main + ".png");
+                dayAfterTomorrow.nextSibling.setAttribute("alt", data.list[15].weather[0].icon);
+                //  dayAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[15].weather[0].main + ".png");
+                dayAfterAfterTomorrow.nextSibling.setAttribute("alt", data.list[23].weather[0].icon);
+                // dayAfterAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[23].weather[0].main + ".png");
+            } else if (x >= 18 && x < 20) {
+                tomorrow.innerHTML = Math.round(data.list[6].main.temp) + "°";
+                dayAfterTomorrow.innerHTML = Math.round(data.list[14].main.temp) + "°";
+                dayAfterAfterTomorrow.innerHTML = Math.round(data.list[22].main.temp) + "°";
+
+                tomorrow.nextSibling.setAttribute("alt", data.list[6].weather[0].main);
+                tomorrow.nextSibling.setAttribute("src", "./img/" + data.list[6].weather[0].main + ".png");
+                dayAfterTomorrow.nextSibling.setAttribute("alt", data.list[14].weather[0].main);
+                dayAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[14].weather[0].main + ".png");
+                dayAfterAfterTomorrow.nextSibling.setAttribute("alt", data.list[22].weather[0].main);
+                dayAfterAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[22].weather[0].main + ".png");
+            } else if (x >= 21 && x < 23) {
+                tomorrow.innerHTML = Math.round(data.list[5].main.temp) + "°";
+                dayAfterTomorrow.innerHTML = Math.round(data.list[13].main.temp) + "°";
+                dayAfterAfterTomorrow.innerHTML = Math.round(data.list[21].main.temp) + "°";
+                tomorrow.nextSibling.setAttribute("alt", data.list[5].weather[0].main);
+                tomorrow.nextSibling.setAttribute("src", "./img/" + data.list[5].weather[0].main + ".png");
+                dayAfterTomorrow.nextSibling.setAttribute("alt", data.list[13].weather[0].main);
+                dayAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[13].weather[0].main + ".png");
+                dayAfterAfterTomorrow.nextSibling.setAttribute("alt", data.list[21].weather[0].main);
+                dayAfterAfterTomorrow.nextSibling.setAttribute("src", "./img/" + data.list[21].weather[0].main + ".png");
+            }
+        });
+}
+getTemperatureFuture(nameCity);
+
+// search weather
+
+let search = document.querySelector(".loading");
+let searchIcon = document.querySelector(".voice-input");
+let input = document.querySelector('input');
+search.onclick = function() { getMovie(); }
+searchIcon.onclick = function() { getMovie(); }
+input.addEventListener("keydown", function(event) {
+    if (event.which == 13 || event.keyCode == 13) {
+        getMovie()
+        return false;
+    }
+    return true;
+});
+let error = document.querySelector('.error')
+
+function getMovie() {
+    event.preventDefault()
+    let searchValue = document.querySelector('input').value
+    error.innerHTML = 'No results for "' + searchValue + '"'
+    checkLanguage(searchValue);
+};
+
+function checkLanguage(word) {
+    if (/^[а-яё]+$/i.test(word)) {
+        let txt = document.querySelector('input')
+        var request = new XMLHttpRequest();
+        var text = encodeURIComponent(word);
+        var key = "trnsl.1.1.20200506T144225Z.cdbaf785b66148d2.1647f625bc419ac1eafd91f742de43be8cfb34c6";
+        var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=" + key + "&text=" + text + "&lang=ru-en&format=plain&options=1"
+        request.open('GET', url, true);
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+                var data = JSON.parse(request.responseText);
+                txt.value = data.text;
+                getWeather(txt.value);
+                getTemperatureFuture(txt.value);
+                getHumidity(txt.value)
+                getLatLon(txt.value)
+                getWeather(txt.value)
+                getSearchWeather(txt.value)
+                clearInputs()
+            }
+        };
+        request.send();
+    } else {
+        getWeather(txt.value);
+        getTemperatureFuture(txt.value);
+        getHumidity(txt.value)
+        getLatLon(txt.value)
+        getWeather(txt.value)
+        clearInputs()
+    }
+}
+
+function clearInputs() {
+    input.value = "";
+}
+clearInputs()
+
+function getSearchWeather(name) {
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${name}&lang=ua&units=metric&appid=0c155cccd3a72d79d594e3d7b1381dae`)
+        .then(res => res.json())
+        .then(data => {
+            for (let i = 0; i < data.list.length; i++) {
+                console.log(data.list[i].weather[0].icon + " " + data.list[i].weather[0].description);
+                //console.log(data.list[i].weather[0].id );
+                //  console.log(data.list[i].weather[0].main);
+                console.log();
+            }
+        });
+
+}
+
+function getIcon() {
+    var forecastIcon = document.querySelectorAll(".forecast__icon")
+    for (let i = 0; i < forecastIcon.length; i++) {
+        if (forecastIcon[i].getAttribute('alt') == "10d" || forecastIcon[i].getAttribute('alt') == "10n") {
+            forecastIcon[i].setAttribute("src", "./img/Rain.png");
+        } else if (forecastIcon[i].getAttribute('alt') == "01d" || forecastIcon[i].getAttribute('alt') == "01n") {
+            forecastIcon[i].setAttribute("src", "./img/Clear.png");
+        } else if (forecastIcon[i].getAttribute('alt') == "04n" || forecastIcon[i].getAttribute('alt') == "04d") {
+            forecastIcon[i].setAttribute("src", "./img/Clouds.png");
+        } else if (forecastIcon[i].getAttribute('alt') == "02d" || forecastIcon[i].getAttribute('alt') == "02n" || forecastIcon[i].getAttribute('alt') == "03d" || forecastIcon[i].getAttribute('alt') == "03n") {
+            forecastIcon[i].setAttribute("src", "./img/partly-cloudy-day.png");
+        }
+    }
+}
+getIcon()
