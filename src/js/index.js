@@ -1,8 +1,8 @@
 import countrys from './country.js';
 const urlImg = "https://api.unsplash.com/photos/random?orientation=landscape&per_page=1&query=nature&client_id=tjuTknKjnJDYCcxiACbpfs3na5IwzY0fpGc75GLqI1Y";
-var nameCity = "Minsk"
-var urlWeather = `https://api.openweathermap.org/data/2.5/forecast?q=${nameCity}&lang=ua&units=metric&appid=0c155cccd3a72d79d594e3d7b1381dae`
-const city = document.querySelector(".weather-data-cluster__location")
+const nameCity = "Minsk"
+const city = document.querySelector(".city");
+const country = document.querySelector(".country");
 const temperatureToday = document.querySelector(".weather-data-cluster__temperature-today")
 const Latitude = document.querySelector(".lat")
 const Longitude = document.querySelector(".lon");
@@ -12,6 +12,7 @@ const feels = document.querySelector(".feels");
 const descriptionWeather = document.querySelector(".description")
 var farengate = document.querySelector(".farengate");
 var celsiu = document.querySelector(".celsiu");
+const preload = document.querySelector(".preload")
 
 function getLinkToImage() {
     fetch(urlImg)
@@ -64,24 +65,38 @@ function getDayWeek() {
     }
 }
 getDayWeek()
+    // preload
+var activPreloud = document.querySelector(".activ-prelod")
+preload.onclick = function() {
+        getDayWeek();
+        getLatLon()
+        getHumidity();
+        activPreloud.setAttribute("src", "./img/Reload.svg");
+        window.setTimeout(function() {
+            activPreloud.setAttribute("src", "./img/Reload.png");
+        }, 1000)
+    }
     // language selection
 var languages = document.querySelectorAll(".language")
 languages[0].onclick = function() {
     languages[1].classList.remove("inactive")
     languages[0].classList.add("inactive")
     getDayWeek();
-    getLatLon()
-    getHumidity()
+    getLatLon(city.textContent)
+    getHumidity(city.textContent)
 }
 languages[1].onclick = function() {
     languages[0].classList.remove("inactive")
     languages[1].classList.add("inactive")
+        // cityTranslation()
     getDayWeek();
-    getLatLon()
-    getHumidity()
+    getLatLon(city.textContent)
+    getHumidity(city.textContent)
 }
 var weatherIcon = document.querySelector(".weather-data-cluster__weather-icon")
     // search region
+
+
 function getWeather(Ncity) {
     fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${Ncity}&lang=ua&units=metric&appid=0c155cccd3a72d79d594e3d7b1381dae`)
         .then(res => res.json())
@@ -92,13 +107,15 @@ function getWeather(Ncity) {
             weatherIcon.setAttribute("src", "./img/" + data.list[0].weather[0].main + ".png");
             for (let i = 0; i < countrys.length; i++) {
                 if (countrys[i].alpha2 == data.city.country) {
-                    city.innerHTML = data.city.name + ", " + countrys[i].english
+                    city.innerHTML = data.city.name;
+                    country.innerHTML = ", " + countrys[i].english;
                 }
             }
 
         });
 
 }
+
 getWeather(nameCity)
 
 function getLatLon(Ncity) {
@@ -140,8 +157,8 @@ function getHumidity(Ncity) {
             }
         });
 }
-getHumidity(nameCity)
 
+getHumidity(nameCity)
 
 var tomorrow = document.querySelector(".tomorrow");
 var dayAfterTomorrow = document.querySelector(".day-after-tomorrow");
@@ -203,7 +220,7 @@ function getTemperatureFuture(Ncity) {
                 tomorrow.nextSibling.setAttribute("alt", data.list[6].weather[0].icon);
                 dayAfterTomorrow.nextSibling.setAttribute("alt", data.list[14].weather[0].icon);
                 dayAfterAfterTomorrow.nextSibling.setAttribute("alt", data.list[22].weather[0].icon);
-            } else if (x >= 21 && x < 23) {
+            } else if (x >= 21 && x < 24) {
                 tomorrow.innerHTML = Math.round(data.list[5].main.temp) + "°";
                 dayAfterTomorrow.innerHTML = Math.round(data.list[13].main.temp) + "°";
                 dayAfterAfterTomorrow.innerHTML = Math.round(data.list[21].main.temp) + "°";
@@ -332,3 +349,20 @@ function temperatureConverterCelsiu(num) {
     var valNum = parseFloat(num.textContent);
     num.innerHTML = Math.round((valNum - 32) / 1.8) + "°";
 }
+// city ​​translation
+// function cityTranslation() {
+//     console.log(city.textContent)
+//     var txt = city.textContent;
+//     var request = new XMLHttpRequest();
+//     var text = encodeURIComponent(txt.value);
+//     var key = "trnsl.1.1.20200506T144225Z.cdbaf785b66148d2.1647f625bc419ac1eafd91f742de43be8cfb34c6";
+//     var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=" + key + "&text=" + text + "&lang=en-ru&format=plain&options=1"
+//     request.open('GET', url, true);
+//     request.onload = function() {
+//         if (request.status >= 200 && request.status < 400) {
+//             var data = JSON.parse(request.responseText);
+//             city.innerHTML = data.text;
+//         }
+//     };
+//     request.send();
+// }
