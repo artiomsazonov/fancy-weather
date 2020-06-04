@@ -10,9 +10,12 @@ const humidity = document.querySelector(".humidity");
 const windSpeed = document.querySelector(".wind-speed");
 const feels = document.querySelector(".feels");
 const descriptionWeather = document.querySelector(".description")
-var farengate = document.querySelector(".farengate");
-var celsiu = document.querySelector(".celsiu");
-const preload = document.querySelector(".preload")
+const farengate = document.querySelector(".farengate");
+const celsiu = document.querySelector(".celsiu");
+const preload = document.querySelector(".preload");
+const search = document.querySelector(".loading");
+const searchIcon = document.querySelector(".voice-input");
+const input = document.querySelector('input');
 
 function getLinkToImage() {
     fetch(urlImg)
@@ -56,10 +59,10 @@ function getDayWeek() {
     var activ = document.querySelector(".inactive")
     for (let i = 0; i < days.length; i++) {
         if (activ.innerText == "En") {
-            days[i].innerHTML = daysWeekEn[month_num + 4]
+            days[i].innerHTML = daysWeekEn[month_num]
             month_num++
         } else {
-            days[i].innerHTML = daysWeekRu[month_num + 4]
+            days[i].innerHTML = daysWeekRu[month_num]
             month_num++
         }
     }
@@ -130,10 +133,15 @@ function getLatLon(Ncity) {
             var activ = document.querySelector(".inactive")
             if (activ.innerText == "En") {
                 Longitude.innerHTML = "Longitude: " + lon + "°" + Math.floor(desLon * 60) + "'"
-                Latitude.innerHTML = "Latitude: " + lat + "°" + Math.floor(desLat * 60) + "'"
+                Latitude.innerHTML = "Latitude: " + lat + "°" + Math.floor(desLat * 60) + "'";
+                search.innerHTML = "Search";
+                input.setAttribute("placeholder", "Search city or ZIP");
             } else {
                 Longitude.innerHTML = "Долгота: " + lon + "°" + Math.floor(desLon * 60) + "'"
-                Latitude.innerHTML = "Широта: " + lat + "°" + Math.floor(desLat * 60) + "'"
+                Latitude.innerHTML = "Широта: " + lat + "°" + Math.floor(desLat * 60) + "'";
+                search.innerHTML = "Поиск"
+                input.setAttribute("placeholder", "Поиск города");
+
             }
         });
 }
@@ -236,9 +244,7 @@ getTemperatureFuture(nameCity);
 
 // search weather
 
-let search = document.querySelector(".loading");
-let searchIcon = document.querySelector(".voice-input");
-let input = document.querySelector('input');
+
 search.onclick = function() { getInputValue(); }
 searchIcon.onclick = function() { getInputValue(); }
 input.addEventListener("keydown", function(event) {
