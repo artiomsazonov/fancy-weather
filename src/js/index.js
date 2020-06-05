@@ -59,10 +59,10 @@ function getDayWeek() {
     var activ = document.querySelector(".inactive")
     for (let i = 0; i < days.length; i++) {
         if (activ.innerText == "En") {
-            days[i].innerHTML = daysWeekEn[month_num]
+            days[i].innerHTML = daysWeekEn[month_num + 1]
             month_num++
         } else {
-            days[i].innerHTML = daysWeekRu[month_num]
+            days[i].innerHTML = daysWeekRu[month_num + 1]
             month_num++
         }
     }
