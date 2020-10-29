@@ -264,25 +264,19 @@ function getInputValue() {
 
 function checkLanguage(word) {
     if (/^[а-яё]+$/i.test(word)) {
-        let txt = document.querySelector('input')
-        var request = new XMLHttpRequest();
         var text = encodeURIComponent(word);
-        var key = "trnsl.1.1.20200506T144225Z.cdbaf785b66148d2.1647f625bc419ac1eafd91f742de43be8cfb34c6";
-        var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=" + key + "&text=" + text + "&lang=ru-en&format=plain&options=1"
-        request.open('GET', url, true);
-        request.onload = function() {
-            if (request.status >= 200 && request.status < 400) {
-                var data = JSON.parse(request.responseText);
-                txt.value = data.text;
+        var txt = document.querySelector('input')
+        fetch(`https://api.mymemory.translated.net/get?q=${text}&langpair=ru|en`)
+            .then(res => res.json())
+            .then(data => {
+                txt.value = data.responseData.translatedText;
                 getWeather(txt.value);
                 getTemperatureFuture(txt.value);
                 getHumidity(txt.value);
                 getLatLon(txt.value);
                 getWeather(txt.value);
                 getMap(txt.value);
-            }
-        };
-        request.send();
+            })
     } else {
         getWeather(word);
         getTemperatureFuture(word);
